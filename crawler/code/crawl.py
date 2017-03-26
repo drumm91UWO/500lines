@@ -17,7 +17,7 @@ import reporting
 ARGS = argparse.ArgumentParser(description="Web crawler")
 ARGS.add_argument(
     '--iocp', action='store_true', dest='iocp',
-    default=False, help='Use IOCP event loop (Windows only)')
+    default=True, help='Use IOCP event loop (Windows only)')#?
 ARGS.add_argument(
     '--select', action='store_true', dest='select',
     default=False, help='Use Select event loop instead of default')
