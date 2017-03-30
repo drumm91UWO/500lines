@@ -9,15 +9,21 @@ import argparse
 import asyncio
 import logging
 import sys
-
 import crawling
 import reporting
+from tkinter import*
 
+# interface
+# root = Tk()
+# label = Label(root, text="root URL you'd like to explore")
+# label.pack()
+# root.mainloop()
 
+# other
 ARGS = argparse.ArgumentParser(description="Web crawler")
 ARGS.add_argument(
     '--iocp', action='store_true', dest='iocp',
-    default=True, help='Use IOCP event loop (Windows only)')#?
+    default=False, help='Use IOCP event loop (Windows only)')  #
 ARGS.add_argument(
     '--select', action='store_true', dest='select',
     default=False, help='Use Select event loop instead of default')
