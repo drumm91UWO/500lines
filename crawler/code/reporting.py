@@ -1,10 +1,27 @@
 """Reporting subsystem for web crawler."""
 
 import time
+from html.parser import HTMLParser
+from urllib.request import urlopen
 
+class MyHTMLParser(HTMLParser):
+    stringData = []
+
+    def handle_data(self, data):
+        MyHTMLParser.stringData.append(data)
+
+'''
+parser = MyHTMLParser()
+html = urlopen('http://python.org/')
+thing = html.read()
+parser.feed(thing.decode("utf-8"))
+'''
 
 class Stats:
     """Record stats of various sorts."""
+    urls = []
+    otherUrls = []
+    parser = MyHTMLParser()
 
     def __init__(self):
         self.stats = {}
@@ -43,13 +60,30 @@ def report(crawler, file=None):
     print('Todo:', crawler.q.qsize(), file=file)
     print('Done:', len(crawler.done), file=file)
     print('Date:', time.ctime(), 'local time', file=file)
+    print('URLs Michael will use')
+    print(Stats.urls)
+    print(len(Stats.urls))
+    print('Other URLs')
+    print(Stats.otherUrls)
+    print(len(Stats.otherUrls))
+    print(Stats.parser.stringData)
+    print(len(Stats.parser.stringData))
+    count_instances('test', Stats.parser.stringData)
 
+def count_instances(stringToCount, arrayOfStringData):
+    count = 0
+    for stringData in arrayOfStringData:
+        count = count + stringData.count(stringToCount)
+
+    print('This is how many times test showed up in the website')
+    print(count)
 
 def url_report(stat, stats, file=None):
     """Print a report on the state for this URL.
-
+    
     Also update the Stats instance.
     """
+
     if stat.exception:
         stats.add('fail')
         stats.add('fail_' + str(stat.exception.__class__.__name__))
@@ -66,6 +100,11 @@ def url_report(stat, stats, file=None):
               stat.size,
               '%d/%d' % (stat.num_new_urls, stat.num_urls),
               file=file)
+        Stats.urls.append(stat.url)
+        if stat.encoding == 'UTF-8':
+            html = urlopen(stat.url)
+            thing = html.read()
+            Stats.parser.feed(thing.decode("utf-8"))
     else:
         if stat.status == 200:
             stats.add('other')
@@ -78,3 +117,4 @@ def url_report(stat, stats, file=None):
               stat.content_type, stat.encoding,
               stat.size,
               file=file)
+        Stats.otherUrls.append(stat.url)
