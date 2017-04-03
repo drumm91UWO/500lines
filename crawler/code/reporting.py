@@ -22,6 +22,7 @@ class Stats:
     urls = []
     otherUrls = []
     parser = MyHTMLParser()
+    words = 'test'
 
     def __init__(self):
         self.stats = {}
@@ -60,6 +61,7 @@ def report(crawler, file=None):
     print('Todo:', crawler.q.qsize(), file=file)
     print('Done:', len(crawler.done), file=file)
     print('Date:', time.ctime(), 'local time', file=file)
+    '''
     print('URLs Michael will use')
     print(Stats.urls)
     print(len(Stats.urls))
@@ -68,15 +70,18 @@ def report(crawler, file=None):
     print(len(Stats.otherUrls))
     print(Stats.parser.stringData)
     print(len(Stats.parser.stringData))
-    count_instances('test', Stats.parser.stringData)
+    '''
+    count_instances(Stats.words, Stats.parser.stringData)
+
+def set_words(search):
+    Stats.words = search
 
 def count_instances(stringToCount, arrayOfStringData):
     count = 0
     for stringData in arrayOfStringData:
         count = count + stringData.count(stringToCount)
 
-    print('This is how many times test showed up in the website')
-    print(count)
+    print(stringToCount + ' showed up ' + str(count) + ' times in the website')
 
 def url_report(stat, stats, file=None):
     """Print a report on the state for this URL.
